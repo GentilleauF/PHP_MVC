@@ -8,7 +8,6 @@
         </div>
     </main>
     
-    <!--Permet l'affichage du formulaire de connexion ou de Accueil -->
     <?= $formSign ?>
     </body>
 

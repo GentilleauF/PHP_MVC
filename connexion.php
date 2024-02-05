@@ -20,19 +20,18 @@ if (isset($_POST['submit'])) {
             $message = $data->getMessage();
         } else {
 
-            //ETAPE 8 Du Diagramme de Sequence : vérifier l'existence de l'utilidateur, et vérifier le mot de passe
+            //vérifier l'existence de l'utilidateur, et vérifier le mot de passe
             if (!empty($data) and password_verify($password, $data[0]['mdp_user'])) {
 
-                //ETAPE 9 Du Diagramme de Sequence : enregistrer les datas en $_SESSION
+                //enregistrer les datas en $_SESSION
                 $_SESSION['id'] = $data[0]['id_user'];
                 $_SESSION['name'] = $data[0]['name_user'];
                 $_SESSION['firstname'] = $data[0]['first_name_user'];
                 $_SESSION['login'] = $data[0]['login_user'];
                 $_SESSION['connected'] = true;
 
-                //ETAPE 10 Du Diagramme de Sequence : message de confirmation
                 $message = 'Vous êtes bien connecté.';
-
+                
                 //Redirection vers index.php pour rafraîchir la page
                 header('refresh:0');
             } else {
