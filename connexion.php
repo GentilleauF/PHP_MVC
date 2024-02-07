@@ -1,42 +1,48 @@
 <?php
 include './index.php';
 
-/////////////////////// CONNEXION  /////////////////////////////
+/////////////////////// CONNECTION  /////////////////////////////
 if (isset($_POST['submit'])) {
-    //Vérification du remplissage des champs
+    //Check if inputs arent empty
     if (
         isset($_POST['login']) and !empty($_POST['login'])
         and isset($_POST['password']) and !empty($_POST['password'])
     ) {
-        //Nettoyer les datas
+        //Sanitize data
         $login = htmlentities(strip_tags(stripslashes(trim($_POST['login']))));
         $password = htmlentities(strip_tags(stripslashes(trim($_POST['password']))));
 
-        //J'appel le Model pour récupérer mon utilisateur
-        $data = loginUser($login);
+        //New user
+         $newUser = new ModelUSer();
+         $newUser->setLogin($login);
+         $newUser->setPwd($password);
+         var_dump($newUser);
+         $dataUser = $newUser->loginUser();
+         var_dump($dataUser);
+        
 
-        //Test la réponse renvoyer par le Model
-        if (gettype($data) == "object") {
-            $message = $data->getMessage();
-        } else {
-
-            //vérifier l'existence de l'utilidateur, et vérifier le mot de passe
-            if (!empty($data) and password_verify($password, $data[0]['mdp_user'])) {
-
-                //enregistrer les datas en $_SESSION
-                $_SESSION['id'] = $data[0]['id_user'];
-                $_SESSION['name'] = $data[0]['name_user'];
-                $_SESSION['firstname'] = $data[0]['first_name_user'];
-                $_SESSION['login'] = $data[0]['login_user'];
+        if (gettype($dataUser) == "array") {
+            echo 'type ok';
+            
+            //Check of the newuser and password check
+            if (!empty($dataUser) and password_verify($password, $dataUser[0]['mdp_user'])) {
+                echo 'pwd ok';
+                //save Session Storage
+                $_SESSION['id'] = $dataUser[0]['id_user'];
+                $_SESSION['name'] = $dataUser[0]['name_user'];
+                $_SESSION['firstname'] = $dataUser[0]['first_name_user'];
+                $_SESSION['login'] = $newUser->getLogin();
                 $_SESSION['connected'] = true;
 
                 $message = 'Vous êtes bien connecté.';
                 
-                //Redirection vers index.php pour rafraîchir la page
+                //RRefresh to index.php
                 header('refresh:0');
             } else {
                 $message = "Utilisateur ou Mot de Passe incorrect.";
             }
+        } else {
+            echo 'erreur, $dataUser n\'est pas un array';
         }
     } else {
         $message = "Veuillez remplir tous les champs.";
@@ -49,7 +55,7 @@ if (isset($_POST['submit'])) {
 
 
 
-////////////// Creation de compte //////////////////////
+//////////// Create account //////////////////////
 if (isset($_POST['submitNewUser'])) {
 
     if (
@@ -67,7 +73,14 @@ if (isset($_POST['submitNewUser'])) {
         $pwd = password_hash($pwd, PASSWORD_BCRYPT);
 
         // APPEL DE LA BDD
-        AddnewUser($name, $firstname, $login, $pwd);
+        $newUser = new ModelUSer();
+        $newUser->setLogin($login);
+        $newUser->setName($name);
+        $newUser->setFirstname($firstname);
+        $newUser->setPwd($pwd);
+
+        $newUser->AddnewUser();
+
     } else {
         $messageTask = "Erreur";
     }

@@ -12,7 +12,7 @@ $formCo = "<h1>Accueil</h1>"; //-> Affiche Accueil à la place du Formulaire de 
 $formSign = "";
 $message = "";
 $messageTask = "";
-$mesArticles = "";
+$myArticlesTitle = "";
 $myArticles = "";
 
 

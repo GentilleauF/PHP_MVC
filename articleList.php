@@ -3,7 +3,9 @@ session_start();
 include './model/modelArticles.php';
 ////////////////////////////// LISTE DES ARTICLES /////////////////////////////
 
-    $listedArrayArticles = ListArticles();
+    //NEW OBJECT
+    $listedArticles = new Articles;
+    $listedArrayArticles = $listedArticles->ListArticles();
 
     ob_start();
     foreach ($listedArrayArticles as $oneArticle) {

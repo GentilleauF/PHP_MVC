@@ -3,7 +3,7 @@
         <p><?= $message ?></p>
 
         <div>
-            <?= $mesArticles ?>
+            <?= $myArticlesTitle ?>
             <?= $myArticles ?>
         </div>
     </main>
