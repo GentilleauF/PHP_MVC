@@ -5,7 +5,7 @@
     //-> Permet d'afficher le lien vers Mon Compte et le Boutton de Déconnexion, si on est connecté
     if(isset($_SESSION['connected'])){
         $linkProfil = '
-        <a href="compte.php">Mon Compte</a>
-        <a href="ajoutArticleandCat.php">Ajouter un article</a>
-        <button><a href="deco.php">Deconnexion</a></button>';
+        <a href="compte">Mon Compte</a>
+        <a href="ajoutArticle">Ajouter un article</a>
+        <button><a href="deco">Deconnexion</a></button>';
     }

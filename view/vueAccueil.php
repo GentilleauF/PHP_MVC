@@ -1,6 +1,6 @@
     <main>
         <?= $formCo ?> <!--Permet l'affichage du formulaire de connexion ou de Accueil -->
-        <p><?= $message ?></p>
+        <p><?= $messageConnexion ?></p>
 
         <div>
             <?= $myArticlesTitle ?>
@@ -9,6 +9,7 @@
     </main>
     
     <?= $formSign ?>
+    <?= $messageTask ?>
     </body>
 
     </html>

@@ -1,6 +1,6 @@
 <?php
 //MODEL : Gérer les Datas et l'Accès à la BDD
-
+// include './utils/bddMySQL.php';
 
 class ModelUSer {
     private ?int $id;
@@ -8,6 +8,7 @@ class ModelUSer {
     private ?string $firstname;
     private ?string $login;
     private ?string $password;
+    private ?BddService $bdd; 
 
 
 //GETTER AND SETTER
@@ -45,17 +46,27 @@ class ModelUSer {
         return $this; //-> retourne l'objet ModelUser
     }
 
+    public function getBdd():BddService{
+        return $this->bdd;
+    }
+
+    public function setBdd(BddService $bdd):ModelUser{
+        $this->bdd = $bdd;
+        return $this; //-> retourne l'objet ModelUser
+    }
+
+
 
 
     //METHODS
    public function loginUser():array|Exception{
         try {
             //Connexion à la BDD
-            $bdd = new PDO('mysql:host=localhost;dbname=tasks', 'root', '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-
+            // $bdd = new PDO('mysql:host=localhost;dbname=tasks', 'root', '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+            // On remplace donc la ligne précedante par la POO
+            $bdd = $this->getBdd()->connect();
             //Préparation de la requête
             $req = $bdd->prepare('SELECT users.id_user, users.name_user, users.first_name_user, users.login_user, users.mdp_user FROM users WHERE login_user = ?');
-
             //Binding de Paramètre et execution
             $login = $this->login;
             $req->bindParam(1, $login, PDO::PARAM_STR);
@@ -77,8 +88,8 @@ class ModelUSer {
     {
         try {
             //Connexion à la BDD
-            $bdd = new PDO('mysql:host=localhost;dbname=tasks', 'root', '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-    
+            $bdd = $this->getBdd()->connect();
+
             //Requête préparée
             $req = $bdd->prepare('INSERT INTO users (name_user, first_name_user, login_user, mdp_user) VALUES (?,?,?,?)');
     
@@ -98,6 +109,7 @@ class ModelUSer {
     
             //Message de Confirmation
             $messageTask = "Vous avez été enregistré avec succès !";
+            echo $messageTask;
             return $messageTask;
         } 
         catch (Exception $error) {
@@ -113,7 +125,7 @@ class ModelUSer {
         try {
             echo 'etape2';
             //Connexion à la BDD
-            $bdd = new PDO('mysql:host=localhost;dbname=tasks', 'root', '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+            $bdd = $this->getBdd()->connect();
 
             //Requête préparée
             $req = $bdd->prepare('UPDATE users SET name_user = ?, first_name_user = ? WHERE login_user = ?');

@@ -1,50 +1,44 @@
 <?php
-session_start();
-//CONTROLLER DE LA PAGE ACCUEIL : faire l'intermédiaire entre le MODEL et la VUE. Prendre les Décision if... else. Dire à la Vue comment afficher les infos.
+//ROUTER DU SITE
 
+//Analyse de l'URL avec parse_url() et retourne ses composants
+$url = parse_url($_SERVER['REQUEST_URI']);
+//test soit l'url a une route sinon on renvoi à la racine
+$path = isset($url['path']) ? $url['path'] : '/';
+/*--------------------------ROUTER -----------------------------*/
+//test de la valeur $path dans l'URL et import de la ressource
+switch ($path) {
+        //route /projet/test -> ./test.php
+    case $path === "/PHP_MVC/TaskAccount/":
+    case $path === "/PHP_MVC/TaskAccount/accueil":
+        include './controller/controllerAccueil.php';
+        break;
 
-//J'importe les ressources dont j'ai besoin
-include './model/modelUser.php';
-include './model/modelArticles.php';
+    case $path === "/PHP_MVC/TaskAccount/compte":
+        include './controller/compte.php';
+        break;
 
+    case $path === "/PHP_MVC/TaskAccount/connexion":
+        include './controller/connexion.php';
+        break;
 
-$formCo = "<h1>Accueil</h1>"; //-> Affiche Accueil à la place du Formulaire de Connexion si on est Connecté
-$formSign = "";
-$message = "";
-$messageTask = "";
-$myArticlesTitle = "";
-$myArticles = "";
+    case $path === "/PHP_MVC/TaskAccount/ajoutArticle":
+        include './controller/ajoutArticleandCat.php';
+        break;
 
+    case $path === "/PHP_MVC/TaskAccount/deco":
+        include './controller/deco.php';
+        break;
 
-//-> Affiche le Formulaire de Connexion si on n'est pas Connecté
-if (!isset($_SESSION['connected'])) {
-    $formCo = '
-    <form action="connexion.php" method="post">
-    <h2>Connexion</h2>
-    <input type="text" name="login" placeholder="Votre Login">
-    <input type="password" name="password" placeholder="Votre Mot de Passe">
-    <input type="submit" name="submit" value="Se Connecter">
-    </form>';
+    case $path === "/PHP_MVC/TaskAccount/articleList":
+        include './controller/articleList.php';
+        break;
+    
+    case $path === "/PHP_MVC/TaskAccount/modifyAccount":
+        include './controller/modifyAccount.php';
+        break; 
+        
+    default :
+        include './controller/page404.php';
+
 }
-
-// Affiche la creation de compte si on est connecte
-if (!isset($_SESSION['connected'])) {
-    $formSign = '
-    <h2>Creer un compte</h2>
-    <form action="connexion.php" method="post">
-    <input type="text" name="name" placeholder="Nom">
-    <input type="text" name="firstname" placeholder="Prénom">
-    <input type="text" name="login" placeholder="Login">
-    <input type="text" name="pwd" placeholder="Mot de passe">
-    <input type="submit" name="submitNewUser">
-</form>';
-}
-
-include './myArticles.php';
-include './controlerNav.php';
-include './view/header.php';
-include './view/nav.php'; //-> affiche la navbar
-include './view/vueAccueil.php';
-
-
-

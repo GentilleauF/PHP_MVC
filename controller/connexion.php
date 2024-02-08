@@ -1,5 +1,5 @@
 <?php
-include './index.php';
+ include './controller/controllerAccueil.php';
 
 /////////////////////// CONNECTION  /////////////////////////////
 if (isset($_POST['submit'])) {
@@ -13,39 +13,40 @@ if (isset($_POST['submit'])) {
         $password = htmlentities(strip_tags(stripslashes(trim($_POST['password']))));
 
         //New user
-         $newUser = new ModelUSer();
-         $newUser->setLogin($login);
-         $newUser->setPwd($password);
-         var_dump($newUser);
-         $dataUser = $newUser->loginUser();
-         var_dump($dataUser);
-        
+        $userConnection = new ModelUSer();
+        $userConnection->setLogin($login);
+        $userConnection->setPwd($password);
+        $userConnection->setBdd(new BddMySQL('localhost', 'tasks', 'root', ''));
+        //  var_dump($userConnection);
+        $dataUser = $userConnection->loginUser();
 
         if (gettype($dataUser) == "array") {
-            echo 'type ok';
-            
-            //Check of the newuser and password check
+
+            //Check of the userConnection and password check
             if (!empty($dataUser) and password_verify($password, $dataUser[0]['mdp_user'])) {
                 echo 'pwd ok';
                 //save Session Storage
                 $_SESSION['id'] = $dataUser[0]['id_user'];
                 $_SESSION['name'] = $dataUser[0]['name_user'];
                 $_SESSION['firstname'] = $dataUser[0]['first_name_user'];
-                $_SESSION['login'] = $newUser->getLogin();
+                $_SESSION['login'] = $userConnection->getLogin();
                 $_SESSION['connected'] = true;
 
                 $message = 'Vous êtes bien connecté.';
-                
-                //RRefresh to index.php
+
+                //Refresh to index.php
                 header('refresh:0');
             } else {
-                $message = "Utilisateur ou Mot de Passe incorrect.";
+                echo "erreur 1";
+                $messageConnexion = "Utilisateur ou Mot de Passe incorrect.";
+                return $messageConnexion;
             }
         } else {
             echo 'erreur, $dataUser n\'est pas un array';
         }
     } else {
-        $message = "Veuillez remplir tous les champs.";
+        echo "erreur 2";
+        return $messageConnexion = "Veuillez remplir tous les champs.";
     }
 }
 
@@ -64,8 +65,6 @@ if (isset($_POST['submitNewUser'])) {
         and isset($_POST['login']) and !empty($_POST['login'])
         and isset($_POST['pwd']) and !empty($_POST['pwd'])
     ) {
-        echo 'etape1';
-
         $name = htmlentities(strip_tags(stripslashes(trim($_POST['name']))));
         $firstname = htmlentities(strip_tags(stripslashes(trim($_POST['firstname']))));
         $login = htmlentities(strip_tags(stripslashes(trim($_POST['login']))));
@@ -78,15 +77,14 @@ if (isset($_POST['submitNewUser'])) {
         $newUser->setName($name);
         $newUser->setFirstname($firstname);
         $newUser->setPwd($pwd);
+        //
+        $newUser->setBdd(new BddMySQL('localhost', 'tasks', 'root', ''));
+
 
         $newUser->AddnewUser();
 
+        return $newUser;
     } else {
         $messageTask = "Erreur";
     }
 }
-
-
-
-
-

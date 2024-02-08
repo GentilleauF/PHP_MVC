@@ -1,5 +1,5 @@
 <?php
-include './index.php';
+// include './index.php';
 
 //////////////////////   Modification compte  /////////////////////////////
 if (isset($_POST['SubmitModifyUser'])) {
@@ -13,16 +13,23 @@ if (isset($_POST['SubmitModifyUser'])) {
         $newFirstname = htmlentities(strip_tags(stripslashes(trim($_POST['newFirstname']))));
         $login = $_SESSION['login'];
 
-        $response = modifyUser($newName, $newFirstname, $login);
+        $modifyUser = new ModelUSer;
+        $modifyUser->setName($newName);
+        $modifyUser->setFirstname($newFirstname);
+        $modifyUser->setLogin($login);
+        $modifyUser->setBdd(new BddMySQL('localhost', 'tasks', 'root', ''));
+
+        
+        $response = $modifyUser->modifyUser();
 
         if (is_string($response)) {
-            $_SESSION['name'] = $newName;
-            $_SESSION['firstname'] = $newFirstname;
+            $_SESSION['name'] = $modifyUser->getName();
+            $_SESSION['firstname'] = $modifyUser->getFirstname();
 
-            header("Location: ./compte.php");
+            header("Location: ./compte");
         }
     } else {
         $message = 'Veuillez remplir tout les champs';
-        header("Location: ./compte.php");
+        header("Location: ./compte");
     }
 }

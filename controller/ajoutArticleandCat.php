@@ -62,7 +62,7 @@ if (isset($_POST['SubmitArticle'])) {
 
 
 
-include './controlerNav.php';
+include './controller/controlerNav.php';
 include './view/header.php';
 include './view/nav.php';
 include './view/VueAjoutArticle.php';
